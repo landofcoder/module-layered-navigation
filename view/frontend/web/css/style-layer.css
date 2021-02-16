@@ -1,0 +1,18 @@
+#layered-filter-block .filter-content.lof {
+    position: initial!important;
+}
+.lof_overlay{
+    background-color: #FFFFFF;
+    height: 100%;
+    left: 0;
+    opacity: 0.5;
+    filter: alpha(opacity = 50);
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 555;
+    display:none;
+}
+.lof_overlay img {
+    top: 30%;left: 45%;display: block;position: absolute;
+}

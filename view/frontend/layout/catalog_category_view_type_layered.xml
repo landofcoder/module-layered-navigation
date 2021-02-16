@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <move element="div.sidebar.main" destination="columns" before="main"/>
+        <move element="div.sidebar.additional" destination="columns" after="-"/>
+        <referenceBlock name="catalog.leftnav">
+            <action method="setTemplate" ifconfig="layered_navigation/general/enable">
+                <argument name="template" xsi:type="string">Lof_LayeredNavigation::layer/view.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="catalog.navigation.renderer">
+            <action method="setTemplate" ifconfig="layered_navigation/general/enable">
+                <argument name="template" xsi:type="string">Lof_LayeredNavigation::layer/filter.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="category.products">
+            <action method="setTemplate" ifconfig="layered_navigation/general/enable">
+                <argument name="template" xsi:type="string">Lof_LayeredNavigation::products.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <layered_navigation>
+            <general>
+                <enable>0</enable>
+                <enable_shop_by>0</enable_shop_by>
+                <enable_price_slider>1</enable_price_slider>
+            </general>
+        </layered_navigation>
+    </default>
+</config>

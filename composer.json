@@ -1,0 +1,26 @@
+
+{
+    "name": "landofcoder/module-layered-navigation",
+    "description": "Magento 2 Layered Navigation extension",
+    "type": "magento2-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Landofcoder",
+            "email": "info@landofcoder.com"
+        }
+    ],
+    "version": "1.0.0",
+    "minimum-stability": "dev",
+    "require": {
+        "landofcoder/module-all" : "1.*"
+      },
+    "autoload": {
+        "psr-4": {
+            "Lof\\LayeredNavigation\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}

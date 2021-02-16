@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Backend/etc/menu.xsd">
+<menu>
+    <add id="Lof_LayeredNavigation::layer_elements" sortOrder="10" title="Lof LayeredNavigation" module="Lof_LayeredNavigation" resource="Lof_LayeredNavigation::layer" parent="Lof_All::lof_all"/>
+    <add id="Lof_LayeredNavigation::configuration" title="Settings" module="Lof_LayeredNavigation" sortOrder="80" parent="Lof_LayeredNavigation::layer_elements" action="adminhtml/system_config/edit/section/layered_navigation" resource="Lof_LayeredNavigation::configuration"/>
+</menu>
+</config>
