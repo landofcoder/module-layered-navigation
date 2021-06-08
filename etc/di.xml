@@ -19,6 +19,10 @@
     <type name="Magento\CatalogSearch\Model\Layer\Category\ItemCollectionProvider">
         <arguments>
             <argument name="collectionFactory" xsi:type="object">Lof\LayeredNavigation\Model\ResourceModel\CloneCollection\CollectionFactory</argument>
+            <argument name="factories" xsi:type="array">
+                <item name="elasticsearch6" xsi:type="object">Lof\LayeredNavigation\Model\ResourceModel\CloneCollection\CollectionFactory</item>
+                <item name="elasticsearch7" xsi:type="object">Lof\LayeredNavigation\Model\ResourceModel\CloneCollection\CollectionFactory</item>
+            </argument>
         </arguments>
     </type>
     <preference for="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection"
