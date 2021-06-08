@@ -23,7 +23,7 @@ $enable_price_slider = $lof->getStoreConfig("layered_navigation/general/enable_p
 
         ?>
         <li class="item">
-            <?php if(false && $enable_price_slider && $attributeModel && $attributeModel->getFrontendInput() == 'price'): ?>
+            <?php if($enable_price_slider && $attributeModel && $attributeModel->getFrontendInput() == 'price'): ?>
                 <?php $productCollection = $filter->getLayer()->getProductCollection();
                 $collection = clone $productCollection;
                 $collection = $collection->removeAttributeSearch(['price.from', 'price.to']);
