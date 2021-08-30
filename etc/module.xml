@@ -4,6 +4,8 @@
         <sequence>
             <module name="Magento_Catalog"/>
             <module name="Magento_LayeredNavigation"/>
+            <module name="Magento_Elasticsearch7"/>
+            <module name="Magento_Elasticsearch"/>
             <module name="Lof_Core"/>
         </sequence>
     </module>

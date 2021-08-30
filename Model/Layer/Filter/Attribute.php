@@ -106,8 +106,8 @@ class Attribute extends AbstractFilter
 
 
         if($this->filterValue){
-            $productCollectionClone = $productCollection->getCollectionClone();
-            $collection = $productCollectionClone->removeAttributeSearch($attribute->getAttributeCode());
+            $collection = clone $productCollection;
+            //$collection = $collection->removeAttributeSearch($attribute->getAttributeCode());
         } else {
             $collection = $productCollection;
         }

@@ -12,4 +12,6 @@
     </type>
     <preference for="Magento\Catalog\Block\Product\ProductList\Toolbar" type="Lof\LayeredNavigation\Block\Product\ProductList\Toolbar" />
     <preference for="Magento\Theme\Block\Html\Pager" type="Lof\LayeredNavigation\Block\Html\Pager" />
+    <preference for="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection"
+                type="Lof\LayeredNavigation\Model\ResourceModel\CloneCollection\Fulltext\Collection" />
 </config>

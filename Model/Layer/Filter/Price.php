@@ -96,7 +96,6 @@ class Price extends AbstractFilter
 		$filter = $request->getParam($this->getRequestVar());
 		if (!$filter || is_array($filter)) {
 			$this->filterValue = false;
-
 			return $this;
 		}
 
@@ -104,7 +103,6 @@ class Price extends AbstractFilter
 		$filter       = $this->dataProvider->validateFilter($filterParams[0]);
 		if (!$filter) {
 			$this->filterValue = false;
-
 			return $this;
 		}
 
@@ -117,37 +115,46 @@ class Price extends AbstractFilter
 		list($from, $to) = $filter;
 
 		$this->getLayer()->getProductCollection()->addFieldToFilter(
-			'price',
-			['from' => $from, 'to' => $to]
-		);
+            'price',
+            ['from' => $from, 'to' =>  empty($to) || $from == $to ? $to : $to - self::PRICE_DELTA]
+        );
 
 		$this->getLayer()->getState()->addFilter(
 			$this->_createItem($this->_renderRangeLabel(empty($from) ? 0 : $from, $to), $filter)
 		);
+		
 
 		return $this;
 	}
 
 	/**
-	 * Prepare text of range label
-	 *
-	 * @param float|string $fromPrice
-	 * @param float|string $toPrice
-	 * @return float|\Magento\Framework\Phrase
-	 */
-	protected function _renderRangeLabel($fromPrice, $toPrice)
-	{
+     * Prepare text of range label
+     *
+     * @param float|string $fromPrice
+     * @param float|string $toPrice
+     * @param boolean $isLast
+     * @return float|\Magento\Framework\Phrase
+     */
+    protected function _renderRangeLabel($fromPrice, $toPrice, $isLast = false)
+    {
 		if (!$this->_helperFunction->isEnabled()) {
 			return parent::_renderRangeLabel($fromPrice, $toPrice);
 		}
+		$fromPrice = empty($fromPrice) ? 0 : $fromPrice * $this->getCurrencyRate();
+        $toPrice = empty($toPrice) ? $toPrice : $toPrice * $this->getCurrencyRate();
+
 		$formattedFromPrice = $this->priceCurrency->format($fromPrice);
-		if ($toPrice === '') {
-			return __('%1 and above', $formattedFromPrice);
-		} elseif ($fromPrice == $toPrice && $this->dataProvider->getOnePriceIntervalValue()) {
-			return $formattedFromPrice;
-		} else {
-			return __('%1 - %2', $formattedFromPrice, $this->priceCurrency->format($toPrice));
-		}
+		if ($isLast) {
+            return __('%1 and above', $formattedFromPrice);
+        } elseif ($fromPrice == $toPrice && $this->dataProvider->getOnePriceIntervalValue()) {
+            return $formattedFromPrice;
+        } else {
+            if ($fromPrice != $toPrice) {
+                $toPrice -= .01;
+            }
+
+            return __('%1 - %2', $formattedFromPrice, $this->priceCurrency->format($toPrice));
+        }
 	}
 
 	/**
