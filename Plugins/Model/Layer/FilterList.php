@@ -116,6 +116,20 @@ class FilterList
                     break;
             }
 
+            if ($filters) {
+                $tmpFilters = [];
+                $existFilters = [];
+                foreach ($filters as $key => $item) {
+                    if ($item->getName() && !in_array($item->getName(), $existFilters)) {
+                        $existFilters[] = $item->getName();
+                        $tmpFilters[$key] = $item;
+                    }
+                }
+                if ($tmpFilters) {
+                    $filters = $tmpFilters;
+                }
+            }
+
         }
         return $filters;
     }
