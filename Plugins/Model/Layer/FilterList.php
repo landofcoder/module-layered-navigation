@@ -91,11 +91,9 @@ class FilterList
         \Magento\Catalog\Model\Layer $layer
     ) {
         $this->_layer = $layer;
-        if ($this->isEnabled()) {
-            $collection = $layer->getProductCollection();
-            $websiteId = $this->_storeManager->getStore($collection->getStoreId())->getWebsiteId();
-            $this->_addStockStatusToSelect($collection->getSelect(), $websiteId);
-        }
+        $collection = $layer->getProductCollection();
+        $websiteId = $this->_storeManager->getStore($collection->getStoreId())->getWebsiteId();
+        $this->_addStockStatusToSelect($collection->getSelect(), $websiteId);
         return array($layer);
     }
 
@@ -109,6 +107,10 @@ class FilterList
         array $filters
     ) {
         if ($this->isEnabled()) {
+            $layer = $this->_layer;
+            $collection = $layer->getProductCollection();
+            $websiteId = $this->_storeManager->getStore($collection->getStoreId())->getWebsiteId();
+            $this->_addStockStatusToSelect($collection->getSelect(), $websiteId);
             $position = $this->getFilterPosition();
             $stockFilter = $this->getStockFilter();
             switch ($position) {

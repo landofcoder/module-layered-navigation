@@ -108,16 +108,13 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
      */
     protected function _getItemsData()
     {
-
         $data = [];
         foreach ($this->getStatuses() as $status) {
-
             $data[] = [
                 'label' => $this->getLabel($status),
                 'value' => $status,
                 'count' => $this->getProductsCount($status)
             ];
-
         }
         return $data;
     }
@@ -168,11 +165,27 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
     public function getProductsCount($value)
     {
         $collection = $this->getLayer()->getProductCollection();
-        $select = clone $collection->getSelect();
-        $select->reset(\Zend_Db_Select::COLUMNS);
-        $select->reset(\Zend_Db_Select::ORDER);
-        $select->reset(\Zend_Db_Select::LIMIT_COUNT);
-        $select->reset(\Zend_Db_Select::LIMIT_OFFSET);
+        if ($collection->getCatalogPreparedSelect() !== null) {
+            $select = clone $collection->getCatalogPreparedSelect();
+        } else {
+            $select = clone $collection->getSelect();
+            $select = clone $collection->getProductCountSelect();
+        }
+
+        // reset columns, order and limitation conditions
+        $select->reset(\Magento\Framework\DB\Select::COLUMNS);
+        $select->reset(\Magento\Framework\DB\Select::ORDER);
+        $select->reset(\Magento\Framework\DB\Select::LIMIT_COUNT);
+        $select->reset(\Magento\Framework\DB\Select::LIMIT_OFFSET);
+
+        $wherePart = $select->getPart(\Magento\Framework\DB\Select::WHERE);
+        //remove e.entity_id part of where part
+        foreach($wherePart as $id => $where) {
+            if (strpos($where, 'e.entity_id IN') >= 0 || strpos($where, 'e.entity_id in') >= 0) {
+                unset($wherePart[$id]);
+            }
+        }
+        $select->setPart(\Magento\Framework\DB\Select::WHERE, $wherePart);
         $select->where('stock_status_idx.stock_status = ?', $value);
         $select->columns(
             [
@@ -182,4 +195,5 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
 
         return $collection->getConnection()->fetchOne($select);
     }
+    
 }
