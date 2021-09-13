@@ -1,4 +1,24 @@
 <?php
+/**
+ * Landofcoder
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Landofcoder.com license that is
+ * available through the world-wide-web at this URL:
+ * https://landofcoder.com/terms
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category   Landofcoder
+ * @package    Lof_LayeredNavigation
+ * @copyright  Copyright (c) 2021 Landofcoder (https://www.landofcoder.com/)
+ * @license    https://landofcoder.com/terms
+ */
+
 namespace Lof\LayeredNavigation\Plugins\Model\Layer\Filter;
 
 class Item
@@ -23,7 +43,6 @@ class Item
      */
 	protected $_helperFunction;
 
-
     /**
      * Item constructor.
      * @param \Magento\Framework\UrlInterface $url
@@ -45,7 +64,7 @@ class Item
 
     public function aroundGetUrl(\Magento\Catalog\Model\Layer\Filter\Item $item, $proceed)
     {
-		if(!$this->_helperFunction->isEnabled()){
+		if (!$this->_helperFunction->isEnabled()) {
 			return $proceed();
 		}
 
@@ -53,14 +72,14 @@ class Item
 
 		$value = array();
 		$requestVar = $item->getFilter()->getRequestVar();
-		if($requestValue = $this->_request->getParam($requestVar)){
+		if ($requestValue = $this->_request->getParam($requestVar)) {
 			$value = explode(',', $requestValue);
 		}
 		$value[] = $item->getValue();
 
-		if($requestVar == 'price'){
+		if ($requestVar == 'price') {
 			$value = ["{price_start}-{price_end}"];
-			if(!$enable_price_slider){
+			if (!$enable_price_slider) {
 				return $proceed();
 			}
 		}
@@ -75,21 +94,21 @@ class Item
 
     public function aroundGetRemoveUrl(\Magento\Catalog\Model\Layer\Filter\Item $item, $proceed)
     {
-		if(!$this->_helperFunction->isEnabled()){
+		if (!$this->_helperFunction->isEnabled()) {
 			return $proceed();
 		}
 
 		$value = array();
 		$requestVar = $item->getFilter()->getRequestVar();
-		if($requestValue = $this->_request->getParam($requestVar)){
+		if ($requestValue = $this->_request->getParam($requestVar)) {
 			$value = explode(',', $requestValue);
 		}
 
-		if(in_array($item->getValue(), $value)){
+		if (in_array($item->getValue(), $value)) {
 			$value = array_diff($value, array($item->getValue()));
 		}
 
-		if($requestVar == 'price'){
+		if ($requestVar == 'price') {
 			$value = [];
 		}
 
