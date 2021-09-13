@@ -21,4 +21,12 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <type name="Magento\Framework\Console\CommandList">
+		<arguments>
+			<argument name="commands" xsi:type="array">
+				<item name="UpdateStockFilter" xsi:type="object">Lof\LayeredNavigation\Console\Command\UpdateStockFilter</item>
+			</argument>
+		</arguments>
+	</type>
 </config>
