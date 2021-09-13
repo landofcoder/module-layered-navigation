@@ -21,11 +21,20 @@
 
 namespace Lof\LayeredNavigation\Plugins\Model\Layer;
 
+use Lof\LayeredNavigation\Model\Layer\Filter as LofFilter;
+use Lof\LayeredNavigation\Model\Config\AdditionalFiltersConfig;
+
 class FilterList
 {
     const CONFIG_ENABLED_XML_PATH   = 'layered_navigation/general/stockFilter';
     const CONFIG_POSITION_XML_PATH  = 'bottom';
-    const STOCK_FILTER_CLASS        = 'Lof\LayeredNavigation\Model\Layer\Filter\Stock';
+    const STOCK_FILTER_CLASS        = LofFilter\Stock::class;
+    const STOCK_FILTER = "stock";
+
+    protected $additionalFilters
+        = [
+            self::STOCK_FILTER  => LofFilter\Stock::class
+        ];
     /**
      * @var \Magento\Framework\ObjectManager
      */
@@ -48,21 +57,29 @@ class FilterList
     protected $_scopeConfig;
 
     /**
+     * @var AdditionalFiltersConfig
+     */
+    private $additionalFiltersConfig;
+
+    /**
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magento\CatalogInventory\Model\ResourceModel\Stock\Status $stockResource
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param AdditionalFiltersConfig $additionalFiltersConfig
      */
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\CatalogInventory\Model\ResourceModel\Stock\Status $stockResource,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        AdditionalFiltersConfig $additionalFiltersConfig
     ) {
         $this->_storeManager = $storeManager;
         $this->_objectManager = $objectManager;
         $this->_stockResource = $stockResource;
         $this->_scopeConfig = $scopeConfig;
+        $this->additionalFiltersConfig   = $additionalFiltersConfig;
     }
 
     /**
@@ -91,9 +108,6 @@ class FilterList
         \Magento\Catalog\Model\Layer $layer
     ) {
         $this->_layer = $layer;
-        $collection = $layer->getProductCollection();
-        $websiteId = $this->_storeManager->getStore($collection->getStoreId())->getWebsiteId();
-        $this->_addStockStatusToSelect($collection->getSelect(), $websiteId);
         return array($layer);
     }
 
@@ -111,6 +125,7 @@ class FilterList
             $collection = $layer->getProductCollection();
             $websiteId = $this->_storeManager->getStore($collection->getStoreId())->getWebsiteId();
             $this->_addStockStatusToSelect($collection->getSelect(), $websiteId);
+
             $position = $this->getFilterPosition();
             $stockFilter = $this->getStockFilter();
             switch ($position) {
@@ -150,7 +165,6 @@ class FilterList
                     $filters = $tmpFilters;
                 }
             }
-
         }
         return $filters;
     }
@@ -201,6 +215,56 @@ class FilterList
         }
 
         return $this;
+    }
+
+    /**
+     * @param array $filters
+     * @param array $additionalFilters
+     *
+     * @return array
+     */
+    private function applyFilterPosition($filters, $additionalFilters = [])
+    {
+        if (!$additionalFilters) {
+            return $filters;
+        }
+
+        foreach ($additionalFilters as $data) {
+            foreach ($data as $position => $additionalFilter) {
+                if (isset($filters[$position]) && $position != 0) {
+                    $firstFilterPart  = array_slice($filters, 0, $position);
+                    $secondFilterPart = array_slice($filters, $position);
+                    $filters    = array_merge($firstFilterPart, [$additionalFilter], $secondFilterPart);
+                } elseif ($position == 0) {
+                    array_unshift($filters, $additionalFilter);
+                } else {
+                    $filters = array_merge($filters, [$additionalFilter]);
+                }
+            }
+        }
+
+        return $filters;
+    }
+
+    /**
+     * @param \Magento\Catalog\Model\Layer $layer
+     *
+     * @return AbstractFilter[]
+     */
+    private function getAdditionalFilters($layer)
+    {
+        $additionalFilters = [];
+        $storeId           = $this->_storeManager->getStore()->getStoreId();
+
+        foreach ($this->additionalFilters as $filter => $class) {
+            if ($this->additionalFiltersConfig->isFilterEnabled($filter, $storeId)) {
+                $position            = $this->additionalFiltersConfig->getFilterPosition($filter, $storeId);
+                $additionalFilters[] = [
+                    $position => $this->_objectManager->create($class, ['layer' => $layer]),
+                ];
+            }
+        }
+        return $additionalFilters;
     }
 
     /**

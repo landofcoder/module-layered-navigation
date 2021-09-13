@@ -10,4 +10,6 @@
     <type name="Magento\Catalog\Model\Layer\FilterList">
         <plugin name="lof-stock-filter-category-navigation" type="Lof\LayeredNavigation\Plugins\Model\Layer\FilterList"/>
     </type>
+    <preference for="Magento\Catalog\Block\Product\ProductList\Toolbar" type="Lof\LayeredNavigation\Block\Product\ProductList\Toolbar" />
+    <preference for="Magento\Theme\Block\Html\Pager" type="Lof\LayeredNavigation\Block\Html\Pager" />
 </config>

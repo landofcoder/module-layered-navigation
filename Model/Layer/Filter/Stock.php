@@ -108,15 +108,26 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
      */
     protected function _getItemsData()
     {
-        $data = [];
+        $optionsData = [];
         foreach ($this->getStatuses() as $status) {
-            $data[] = [
+            $optionsData[] = [
                 'label' => $this->getLabel($status),
                 'value' => $status,
                 'count' => $this->getProductsCount($status)
             ];
         }
-        return $data;
+        foreach ($optionsData as $data) {
+            if ($data['count'] < 1) {
+                continue;
+            }
+            $this->itemDataBuilder->addItemData(
+                $data['label'],
+                $data['value'],
+                $data['count']
+            );
+        }
+
+        return $this->itemDataBuilder->build();
     }
 
     /**

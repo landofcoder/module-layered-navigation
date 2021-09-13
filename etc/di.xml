@@ -1,14 +1,18 @@
 <?xml version="1.0"?>
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- category filters -->
     <virtualType name="categoryFilterList" type="Magento\Catalog\Model\Layer\FilterList">
         <arguments>
+            <!-- we can ignore passing this filters -->
             <argument name="filters" xsi:type="array">
                 <item name="price" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Price</item>
                 <item name="stock" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Stock</item>
             </argument>
         </arguments>
     </virtualType>
+
+    <!-- search filters -->
     <virtualType name="searchFilterList" type="Magento\Catalog\Model\Layer\FilterList">
         <arguments>
             <argument name="filters" xsi:type="array">
