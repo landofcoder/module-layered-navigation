@@ -4,10 +4,14 @@
     <virtualType name="categoryFilterList" type="Magento\Catalog\Model\Layer\FilterList">
         <arguments>
             <argument name="filters" xsi:type="array">
-                <item name="attribute" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Attribute</item>
-                <item name="price" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Price</item>
-                <item name="decimal" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Decimal</item>
-                <item name="category" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Category</item>
+                <item name="stock" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Stock</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="searchFilterList" type="Magento\Catalog\Model\Layer\FilterList">
+        <arguments>
+            <argument name="filters" xsi:type="array">
+                <item name="stock" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Stock</item>
             </argument>
         </arguments>
     </virtualType>

@@ -63,12 +63,12 @@ class FilterList
     }
 
     /**
-     * @param \Magento\Catalog\Model\Layer\FilterList\Interceptor $filterList
+     * @param \Magento\Catalog\Model\Layer\FilterList\Interceptor|\Smile\ElasticsuiteCatalog\Model\Layer\FilterList\Interceptor $filterList
      * @param \Magento\Catalog\Model\Layer $layer
      * @return array
      */
     public function beforeGetFilters(
-        \Magento\Catalog\Model\Layer\FilterList\Interceptor $filterList,
+        $filterList,
         \Magento\Catalog\Model\Layer $layer
     ) {
         $this->_layer = $layer;
@@ -81,12 +81,12 @@ class FilterList
     }
 
     /**
-     * @param \Magento\Catalog\Model\Layer\FilterList\Interceptor $filterList
+     * @param \Magento\Catalog\Model\Layer\FilterList\Interceptor|\Smile\ElasticsuiteCatalog\Model\Layer\FilterList\Interceptor $filterList
      * @param array $filters
      * @return array
      */
     public function afterGetFilters(
-        \Magento\Catalog\Model\Layer\FilterList\Interceptor $filterList,
+        $filterList,
         array $filters
     ) {
         if ($this->isEnabled()) {
