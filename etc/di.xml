@@ -7,7 +7,7 @@
             <!-- we can ignore passing this filters -->
             <argument name="filters" xsi:type="array">
                 <item name="price" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Price</item>
-                <item name="stock" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Stock</item>
+                <!-- <item name="stock" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Stock</item> -->
             </argument>
         </arguments>
     </virtualType>
@@ -17,7 +17,7 @@
         <arguments>
             <argument name="filters" xsi:type="array">
                 <item name="price" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Price</item>
-                <item name="stock" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Stock</item>
+                <!-- <item name="stock" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Stock</item> -->
             </argument>
         </arguments>
     </virtualType>

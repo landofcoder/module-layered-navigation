@@ -51,12 +51,25 @@ class UpgradeData implements UpgradeDataInterface
                     'visible_on_front' => false,
                     'used_in_product_listing' => false,
                     'is_filterable_in_grid'=> true,
+                    'is_filterable_in_search' => 1,
+                    'is_used_for_promo_rules' => 1,
+                    'is_filterable' => 1,
+                    'is_searchable' => 0,
                     'unique' => false,
                     'apply_to' => 'simple',
-                    'is_user_defined' => true
+                    'is_user_defined' => true,
+                    'position' => 100
                 ]
             );
         }
+        if (version_compare($context->getVersion(), '1.0.2', '<')) {
+            $this->updateApplyAttributes($setup);
+        }
         $setup->endSetup();
+    }
+
+    public function updateApplyAttributes($setup)
+    {
+        $this->eavSetupFactory->updateAttribute('catalog_product', InstallData::ATTRIBUTE_CODE, 'apply_to', 'simple,configurable,bundle,grouped');
     }
 }
