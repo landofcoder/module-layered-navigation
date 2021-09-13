@@ -34,8 +34,9 @@ class Toolbar extends \Magento\Catalog\Block\Product\ProductList\Toolbar{
             $select->where('stock_status_idx.stock_status = ?',$value);
         }
         $select->reset(\Magento\Framework\DB\Select::LIMIT_COUNT);
+        $select->reset(\Zend_Db_Select::LIMIT_COUNT);
+        $select->reset(\Zend_Db_Select::LIMIT_OFFSET);
         $result = $collection->getConnection()->fetchAll($select);
-
         return $result;
     }
 

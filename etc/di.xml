@@ -4,6 +4,7 @@
     <virtualType name="categoryFilterList" type="Magento\Catalog\Model\Layer\FilterList">
         <arguments>
             <argument name="filters" xsi:type="array">
+                <item name="price" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Price</item>
                 <item name="stock" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Stock</item>
             </argument>
         </arguments>
@@ -11,24 +12,9 @@
     <virtualType name="searchFilterList" type="Magento\Catalog\Model\Layer\FilterList">
         <arguments>
             <argument name="filters" xsi:type="array">
+                <item name="price" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Price</item>
                 <item name="stock" xsi:type="string">Lof\LayeredNavigation\Model\Layer\Filter\Stock</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="Lof\LayeredNavigation\Model\ResourceModel\CloneCollection\CollectionFactory" type="Magento\Catalog\Model\ResourceModel\Product\CollectionFactory">
-        <arguments>
-            <argument name="instanceName" xsi:type="string">Lof\LayeredNavigation\Model\ResourceModel\CloneCollection\Collection</argument>
-        </arguments>
-    </virtualType>
-    <type name="Magento\CatalogSearch\Model\Layer\Category\ItemCollectionProvider">
-        <arguments>
-            <argument name="collectionFactory" xsi:type="object">Lof\LayeredNavigation\Model\ResourceModel\CloneCollection\CollectionFactory</argument>
-            <argument name="factories" xsi:type="array">
-                <item name="elasticsearch6" xsi:type="object">Lof\LayeredNavigation\Model\ResourceModel\CloneCollection\CollectionFactory</item>
-                <item name="elasticsearch7" xsi:type="object">Lof\LayeredNavigation\Model\ResourceModel\CloneCollection\CollectionFactory</item>
-            </argument>
-        </arguments>
-    </type>
-    <preference for="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection"
-                type="Lof\LayeredNavigation\Model\ResourceModel\CloneCollection\Fulltext\Collection" />
 </config>

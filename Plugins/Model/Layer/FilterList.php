@@ -166,8 +166,6 @@ class FilterList
         $select->reset(\Zend_Db_Select::LIMIT_COUNT);
         $select->reset(\Zend_Db_Select::LIMIT_OFFSET);
         if (!isset($from['stock_status_idx'])) {
-
-
             $joinCondition = $this->_stockResource->getConnection()->quoteInto(
                 'e.entity_id = stock_status_idx.product_id AND stock_status_idx.stock_id = ?',
                 \Magento\CatalogInventory\Model\Stock::DEFAULT_STOCK_ID
