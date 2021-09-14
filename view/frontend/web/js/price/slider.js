@@ -1,6 +1,10 @@
 /**
- * Copyright � 2016 Mageplaza. All rights reserved.
- * See https://www.mageplaza.com/LICENSE.txt for license details.
+ * Landofcoder
+ *
+ * @category   Landofcoder
+ * @package    Lof_LayeredNavigation
+ * @copyright  Copyright (c) 2021 Landofcoder (https://www.landofcoder.com/)
+ * @license    https://landofcoder.com/terms
  */
 define([
     'jquery',

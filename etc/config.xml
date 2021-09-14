@@ -7,6 +7,10 @@
                 <enable_shop_by>0</enable_shop_by>
                 <enable_price_slider>1</enable_price_slider>
             </general>
+            <cronjobs>
+                <is_enabled>1</is_enabled>
+                <cronjobupdate>0 */12 * * *</cronjobupdate>
+            </cronjobs>
         </layered_navigation>
     </default>
 </config>

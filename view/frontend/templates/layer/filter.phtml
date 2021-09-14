@@ -1,38 +1,51 @@
-<?php $objectManager = \Magento\Framework\App\ObjectManager::getInstance();?>
-<?php 
-$lof = $this->helper('Lof\LayeredNavigation\Helper\Data');
-$enable_price_slider = $lof->getStoreConfig("layered_navigation/general/enable_price_slider");
+<?php
+/**
+ * Landofcoder
+ *
+ * @category   Landofcoder
+ * @package    Lof_LayeredNavigation
+ * @copyright  Copyright (c) 2021 Landofcoder (https://www.landofcoder.com/)
+ * @license    https://landofcoder.com/terms
+ */
+?>
+<?php
+/** @var \Magento\LayeredNavigation\Block\Navigation\FilterRenderer $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\LayeredNavigation\ViewModel\Layer\Filter $viewModel */
+$viewModel = $block->getData('product_layer_view_model');
+$lofHelperData = $this->helper('Lof\LayeredNavigation\Helper\Data');
+$enable_price_slider = $lofHelperData->getStoreConfig("layered_navigation/general/enable_price_slider");
 ?>
 <ol class="items">
     <?php foreach ($filterItems as $filterItem): ?>
-        <?php $filter = $filterItem->getFilter();
-        $attributeModel = $filter->getData('attribute_model');
-        $inputName = $filter->getRequestVar();
-        $getParamValue = $block->getRequest()->getParam($inputName);
-        $requestArray = $getParamValue ? explode(',', $getParamValue) : [];
-        $str = (string)$filterItem->getValue();
-        if($inputName == 'in-stock'){
-            if(strpos($getParamValue, $str) !== false){
-                $url = $filterItem->getRemoveUrl();
-            }else{
-                $url = $filterItem->getUrl();
+        <?php 
+            $filter = $filterItem->getFilter();
+            $attributeModel = $filter->getData('attribute_model');
+            $inputName = $filter->getRequestVar();
+            $getParamValue = $block->getRequest()->getParam($inputName);
+            $requestArray = $getParamValue ? explode(',', $getParamValue) : [];
+            $str = (string)$filterItem->getValue();
+            if ($inputName == 'in-stock'){
+                if (strpos($getParamValue, $str) !== false) {
+                    $url = $filterItem->getRemoveUrl();
+                } else {
+                    $url = $filterItem->getUrl();
+                }
+            } else {
+                $url = in_array($filterItem->getValue(), $requestArray) ? $filterItem->getRemoveUrl() : $filterItem->getUrl();
             }
-        }else{
-            $url = in_array($filterItem->getValue(), $requestArray) ? $filterItem->getRemoveUrl() : $filterItem->getUrl();
-        }
-
         ?>
         <li class="item">
-            <?php if($enable_price_slider && $attributeModel && $attributeModel->getFrontendInput() == 'price'): ?>
-                <?php $productCollection = $filter->getLayer()->getProductCollection();
+            <?php if ($enable_price_slider && $attributeModel && $attributeModel->getFrontendInput() == 'price'): ?>
+                <?php 
+                $productCollection = $filter->getLayer()->getProductCollection();
                 $collection = clone $productCollection;
-                //$collection = $collection->removeAttributeSearch(['price.from', 'price.to']);
                 $minPrice = $collection->getMinPrice();
                 $maxPrice = $collection->getMaxPrice();
-                if(!$minPrice){
+                if (!$minPrice) {
                     $minPrice = $productCollection->getMinPrice();
                 }
-                if(!$maxPrice){
+                if (!$maxPrice) {
                     $maxPrice = $productCollection->getMaxPrice();
                 }
                 list($from, $to) = $getParamValue ? explode('-', $getParamValue) : [$minPrice, $maxPrice];
@@ -45,10 +58,10 @@ $enable_price_slider = $lof->getStoreConfig("layered_navigation/general/enable_p
                     {
                         "#lof_price_attribute": {
                             "Lof_LayeredNavigation/js/price/slider": {
-                                "selectedFrom": <?php echo $from ?>,
-                                "selectedTo": <?php echo $to ?>,
-                                "priceMin": <?php echo $minPrice ?>,
-                                "priceMax": <?php echo $maxPrice ?>,
+                                "selectedFrom": <?= $from ?>,
+                                "selectedTo": <?= $to ?>,
+                                "priceMin": <?= $minPrice ?>,
+                                "priceMax": <?= $maxPrice ?>,
                                 "priceFormat": <?php /* @escapeNotVerified */ echo $this->helper('Magento\Tax\Helper\Data')->getPriceFormat($block->getStore()); ?>,
                                 "ajaxUrl": <?php /* @escapeNotVerified */ echo $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($filterItem->getUrl()) ?>
                             }
@@ -58,31 +71,35 @@ $enable_price_slider = $lof->getStoreConfig("layered_navigation/general/enable_p
                 <?php break; ?>
             <?php else: ?>
 				<?php if ($filterItem->getCount() >= 0): ?>
-                    <a href="<?php echo $block->escapeUrl($url) ?>" class="lof-item">
-                        <?php if($attributeModel && $attributeModel->getFrontendInput() == 'multiselect' || $inputName == 'in-stock'): ?>
-
-                            <?php if($inputName == 'in-stock'):?>
-                                <input type="checkbox" <?php if(strpos($getParamValue, $str) !== false) {echo 'checked="checked"';} ?> />
-                            <?php else:?>
-                                <input type="checkbox" <?php echo in_array($filterItem->getValue(), $requestArray) ? 'checked="checked"' : ''  ?> />
+                    <a href="<?= $block->escapeUrl($url) ?>" class="lof-item">
+                        <?php if ($attributeModel && $attributeModel->getFrontendInput() == 'multiselect' || $inputName == 'in-stock'): ?>
+                            <?php if ($inputName == 'in-stock'): ?>
+                                <input type="checkbox" <?= (strpos($getParamValue, $str) !== false)?'checked="checked"':''; ?> />
+                            <?php else: ?>
+                                <input type="checkbox" <?= in_array($filterItem->getValue(), $requestArray) ? 'checked="checked"' : ''  ?> />
                             <?php endif;?>
                         <?php endif; ?>
-						<?php /* @escapeNotVerified */ echo $filterItem->getLabel() ?>
-                        <?php if ($this->helper('\Magento\Catalog\Helper\Data')->shouldDisplayProductCountOnLayer()): ?>
-                            <?php if($filterItem->getCount() > 0):?>
-                            <span class="count"><?php /* @escapeNotVerified */ echo $filterItem->getCount()?><span class="filter-count-label">
-                                    <?php if ($filterItem->getCount() == 1):?> <?php /* @escapeNotVerified */ echo __('item')?><?php else:?> <?php /* @escapeNotVerified */ echo __('items') ?><?php endif;?></span></span>
+						<?= /* @noEscape */ $filterItem->getLabel() ?>
+                        <?php if ($viewModel->shouldDisplayProductCountOnLayer()): ?>
+                            <?php if ($filterItem->getCount() > 0):?>
+                                <span class="count"><?= /* @noEscape */ (int) $filterItem->getCount()?><span class="filter-count-label">
+                                <?php if ($filterItem->getCount() == 1):?>
+                                    <?= $escaper->escapeHtml(__('item')) ?>
+                                <?php else:?>
+                                    <?= $escaper->escapeHtml(__('items')) ?>
+                                <?php endif;?>
+                                </span></span>
                             <?php endif; ?>
                         <?php endif; ?>
 					</a>
                 <?php else:?>
-                    <?php if($attributeModel && $attributeModel->getFrontendInput() == 'multiselect'): ?>
+                    <?php if ($attributeModel && $attributeModel->getFrontendInput() == 'multiselect'): ?>
                         <input type="checkbox" disabled="disabled" />
                     <?php endif; ?>
-                    <?php /* @escapeNotVerified */ echo $filterItem->getLabel() ?>
-                    <?php if ($this->helper('\Magento\Catalog\Helper\Data')->shouldDisplayProductCountOnLayer()): ?>
-                        <span class="count"><?php /* @escapeNotVerified */ echo $filterItem->getCount()?><span class="filter-count-label">
-							<?php if ($filterItem->getCount() == 1):?><?php /* @escapeNotVerified */ echo __('item')?><?php else:?><?php /* @escapeNotVerified */ echo __('items') ?><?php endif;?></span></span>
+                    <?= /* @noEscape */ $filterItem->getLabel() ?>
+                    <?php if ($viewModel->shouldDisplayProductCountOnLayer()): ?>
+                        <span class="count"><?= /* @noEscape */ (int) $filterItem->getCount()?><span class="filter-count-label">
+							<?php if ($filterItem->getCount() == 1):?><?= $escaper->escapeHtml(__('item')) ?><?php else:?><?= $escaper->escapeHtml(__('items')) ?><?php endif;?></span></span>
                     <?php endif; ?>
                 <?php endif; ?>
             <?php endif; ?>

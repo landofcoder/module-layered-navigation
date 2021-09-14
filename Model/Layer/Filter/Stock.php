@@ -1,4 +1,23 @@
 <?php
+/**
+ * Landofcoder
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Landofcoder.com license that is
+ * available through the world-wide-web at this URL:
+ * https://landofcoder.com/terms
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category   Landofcoder
+ * @package    Lof_LayeredNavigation
+ * @copyright  Copyright (c) 2021 Landofcoder (https://www.landofcoder.com/)
+ * @license    https://landofcoder.com/terms
+ */
 
 namespace Lof\LayeredNavigation\Model\Layer\Filter;
 
@@ -23,8 +42,8 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
      * Stock constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Catalog\Model\Layer $layer
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\CatalogInventory\Model\ResourceModel\Stock\Status $stockResource
      * @param \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder
      * @param array $data
@@ -32,8 +51,8 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Model\Layer $layer,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\CatalogInventory\Model\ResourceModel\Stock\Status $stockResource,
         \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder,
         array $data = []
@@ -57,13 +76,13 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
         $attributeValue = explode(',', $filter);
         $this->_activeFilter = true;
 
-        if(strpos($filter, ',') == false){
+        if (strpos($filter, ',') == false) {
             $collection = $this->getLayer()->getProductCollection();
             $collection->getSelect()->where('stock_status_idx.stock_status = ?', $filter);
         }
 
         $state = $this->getLayer()->getState();
-        foreach($attributeValue as $value){
+        foreach ($attributeValue as $value) {
 
             $state->addFilter(
                 $this->_createItem($this->getLabel($value), $value)
@@ -71,6 +90,7 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
         }
         return $this;
     }
+
     /**
      * Get filter name
      *
@@ -80,6 +100,7 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
     {
         return self::CONFIG_FILTER_LABEL_PATH;
     }
+
     /**
      * Get data array for building status filter items
      *
@@ -87,19 +108,28 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
      */
     protected function _getItemsData()
     {
-
-        $data = [];
+        $optionsData = [];
         foreach ($this->getStatuses() as $status) {
-
-            $data[] = [
+            $optionsData[] = [
                 'label' => $this->getLabel($status),
                 'value' => $status,
                 'count' => $this->getProductsCount($status)
             ];
-
         }
-        return $data;
+        foreach ($optionsData as $data) {
+            if ($data['count'] < 1) {
+                continue;
+            }
+            $this->itemDataBuilder->addItemData(
+                $data['label'],
+                $data['value'],
+                $data['count']
+            );
+        }
+
+        return $this->itemDataBuilder->build();
     }
+
     /**
      * get available statuses
      * @return array
@@ -111,6 +141,7 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
             \Magento\CatalogInventory\Model\Stock::STOCK_OUT_OF_STOCK
         ];
     }
+
     /**
      * @return array
      */
@@ -121,6 +152,7 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
             \Magento\CatalogInventory\Model\Stock::STOCK_OUT_OF_STOCK => __('Out of stock'),
         ];
     }
+
     /**
      * @param $value
      * @return string
@@ -143,26 +175,28 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
 
     public function getProductsCount($value)
     {
-
         $collection = $this->getLayer()->getProductCollection();
-        $select = clone $collection->getSelect();
-//        $from = $select->getPart(\Zend_Db_Select::FROM);
-//        if (!isset($from['stock_status_idx'])) {
-//
-//            $select->joinLeft(
-//                [
-//                    'stock_status_idx' => $this->_stockResource->getMainTable()
-//                ],
-//                'e.entity_id = stock_status_idx.product_id AND stock_status_idx.stock_id = ?',
-//                \Magento\CatalogInventory\Model\Stock::DEFAULT_STOCK_ID,
-//                ['stock_status_idx.*']
-//            );
-//        }
-//        // reset columns, order and limitation conditions
-        $select->reset(\Zend_Db_Select::COLUMNS);
-        $select->reset(\Zend_Db_Select::ORDER);
-        $select->reset(\Zend_Db_Select::LIMIT_COUNT);
-        $select->reset(\Zend_Db_Select::LIMIT_OFFSET);
+        if ($collection->getCatalogPreparedSelect() !== null) {
+            $select = clone $collection->getCatalogPreparedSelect();
+        } else {
+            $select = clone $collection->getSelect();
+            $select = clone $collection->getProductCountSelect();
+        }
+
+        // reset columns, order and limitation conditions
+        $select->reset(\Magento\Framework\DB\Select::COLUMNS);
+        $select->reset(\Magento\Framework\DB\Select::ORDER);
+        $select->reset(\Magento\Framework\DB\Select::LIMIT_COUNT);
+        $select->reset(\Magento\Framework\DB\Select::LIMIT_OFFSET);
+
+        $wherePart = $select->getPart(\Magento\Framework\DB\Select::WHERE);
+        //remove e.entity_id part of where part
+        foreach($wherePart as $id => $where) {
+            if (strpos($where, 'e.entity_id IN') >= 0 || strpos($where, 'e.entity_id in') >= 0) {
+                unset($wherePart[$id]);
+            }
+        }
+        $select->setPart(\Magento\Framework\DB\Select::WHERE, $wherePart);
         $select->where('stock_status_idx.stock_status = ?', $value);
         $select->columns(
             [
@@ -172,4 +206,5 @@ class Stock extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter
 
         return $collection->getConnection()->fetchOne($select);
     }
+    
 }
