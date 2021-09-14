@@ -33,8 +33,12 @@
                     <label>Enable Cronjob for stock-filter</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="cronjobupdate" translate="label tooltip comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="cronjobupdate" translate="label tooltip comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                       <label>Cronjob for updating stock-filter</label>
+                      <comment>Set time for cronjob (for example: * * * * *   to run every minute)</comment>
+                </field>
+                <field id="cronjobset" translate="label tooltip comment" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                      <label>Cronjob for setting in-stock for old Products</label>
                       <comment>Set time for cronjob (for example: * * * * *   to run every minute)</comment>
                 </field>
               </group>

@@ -10,6 +10,7 @@
             <cronjobs>
                 <is_enabled>1</is_enabled>
                 <cronjobupdate>0 */12 * * *</cronjobupdate>
+                <cronjobset>/30 * * * *</cronjobset>
             </cronjobs>
         </layered_navigation>
     </default>
