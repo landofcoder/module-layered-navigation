@@ -27,6 +27,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Lof\LayeredNavigation\Setup\InstallData;
+use Lof\LayeredNavigation\Helper\StockFilter;
+use Lof\LayeredNavigation\Model\Config\Source\Options;
 
 class SetStockFilter extends Command
 {
@@ -39,6 +42,10 @@ class SetStockFilter extends Command
      */
     protected $_resource;
     protected $_cronService;
+    /**
+     * @var StockFilter
+     */
+    protected $stockFilterHelper;
 
     /**
      * Constructor.
@@ -52,7 +59,7 @@ class SetStockFilter extends Command
         \Lof\LayeredNavigation\Cron\UpdateStockFilter $cronService
         ) {
         $this->_resource = $resource;
-        $this->_cronService = $cronService;
+        $this->stockFilterHelper = $stockFilterHelper;
         parent::__construct();
         
     }
@@ -65,7 +72,7 @@ class SetStockFilter extends Command
         OutputInterface $output
     ) {
         try {
-            $results = $this->_cronService->execute();
+            $results = $this->stockFilterHelper->setAttributeData(Options::INSTOCK_ID);
             $output->writeln("Updated Stock Filter for all Products sucessfully.");
         } catch (\Exception $e) {
             $output->writeln("Some issues when run update stock filter for products.");

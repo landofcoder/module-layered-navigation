@@ -64,7 +64,6 @@ class StockFilter extends AbstractHelper
                     ]
                 ]
             );
-
             $storeId = $this->storeManager->getStore()->getId();
             $ids = [];
             $i = 0;
