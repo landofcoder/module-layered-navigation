@@ -51,12 +51,12 @@ class SetStockFilter extends Command
      * Constructor.
      *
      * @param \Magento\Framework\App\ResourceConnection $resource 
-     * @param \Lof\LayeredNavigation\Cron\UpdateStockFilter $cronService
+     * @param StockFilter $stockFilterHelper
      * 
      */
     public function __construct(
         \Magento\Framework\App\ResourceConnection $resource,
-        \Lof\LayeredNavigation\Cron\UpdateStockFilter $cronService
+        StockFilter $stockFilterHelper
         ) {
         $this->_resource = $resource;
         $this->stockFilterHelper = $stockFilterHelper;
