@@ -58,9 +58,10 @@ class StockFilter extends AbstractHelper
 
     /**
      * @param int|string|null
+     * @param bool $forceAll
      * @return void
      */
-    public function setAttributeData($value)
+    public function setAttributeData($value, $forceAll = false)
     {
         try {
             $collection = $this->productCollection->create()->addAttributeToSelect('*');
@@ -82,8 +83,10 @@ class StockFilter extends AbstractHelper
             // TODO: Convert raw query to to ORM Query
             // phpcs:disable Magento2.SQL.RawQuery.FoundRawSql
             $query = "SELECT t.entity_id FROM " . $table . " t
-            WHERE t.entity_id NOT IN (SELECT e.entity_id ".$select.") GROUP BY t.entity_id LIMIT 0, 1000";
-
+            WHERE t.entity_id NOT IN (SELECT e.entity_id ".$select.") GROUP BY t.entity_id";
+            if ($forceAll) {
+                $query .= " LIMIT 0, 1000"; //limit 1000 items each run   
+            }
             $allIds = $connection->fetchAll($query);
             $storeId = $this->storeManager->getStore()->getId();
             

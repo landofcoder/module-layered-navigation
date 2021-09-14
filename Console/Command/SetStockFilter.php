@@ -72,7 +72,7 @@ class SetStockFilter extends Command
         OutputInterface $output
     ) {
         try {
-            $results = $this->stockFilterHelper->setAttributeData(Options::INSTOCK_ID);
+            $results = $this->stockFilterHelper->setAttributeData(Options::INSTOCK_ID, true);
             $output->writeln("Updated Stock Filter for all Products sucessfully.");
         } catch (\Exception $e) {
             $output->writeln("Some issues when run update stock filter for products.");
