@@ -26,6 +26,7 @@
 		<arguments>
 			<argument name="commands" xsi:type="array">
 				<item name="UpdateStockFilter" xsi:type="object">Lof\LayeredNavigation\Console\Command\UpdateStockFilter</item>
+                <item name="SetStockFilter" xsi:type="object">Lof\LayeredNavigation\Console\Command\SetStockFilter</item>
 			</argument>
 		</arguments>
 	</type>

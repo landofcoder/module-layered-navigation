@@ -4,5 +4,8 @@
         <job name="lofupdatestockfilter" instance="Lof\LayeredNavigation\Cron\UpdateStockFilter" method="execute">
           <config_path>layered_navigation/cronjobs/cronjobupdate</config_path>
         </job>
+        <job name="lofsetstockfilter" instance="Lof\LayeredNavigation\Cron\SetStockFilter" method="execute">
+          <config_path>layered_navigation/cronjobs/cronjobset</config_path>
+        </job>
     </group>
 </config>
