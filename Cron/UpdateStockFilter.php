@@ -24,10 +24,22 @@ class UpdateStockFilter
         $this->resourceConnection = $resourceConnection;
         $this->stockResource = $stockResource;
     }
+
     /**
      * Executes Cronjob for updating 'stock_filter' parameter
      */
     public function execute()
+    {
+        return $this->processStockForProduct();
+    }
+
+    /**
+     * Executes Cronjob for updating 'stock_filter' parameter
+     * 
+     * @param int|null $product_id
+     * @return $this
+     */
+    public function processStockForProduct($product_id = null)
     {
         if ($this->scopeConfig->getValue('layered_navigation/cronjobs/is_enabled') == 1) {
             $connection = $this->resourceConnection->getConnection();
@@ -37,6 +49,9 @@ class UpdateStockFilter
             JOIN cataloginventory_stock_status a ON a.product_id = t.entity_id
             JOIN eav_attribute ap ON ap.attribute_id = t.attribute_id
             SET value = stock_status WHERE attribute_code = '".InstallData::ATTRIBUTE_CODE."'";
+            if ($product_id) {
+                $query .= " AND t.entity_id = ".(int)$product_id;
+            }
             $connection->query($query);
         }
         return $this;
