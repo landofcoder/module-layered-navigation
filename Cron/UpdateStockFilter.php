@@ -30,7 +30,10 @@ class UpdateStockFilter
      */
     public function execute()
     {
-        return $this->processStockForProduct();
+        if ($this->scopeConfig->getValue('layered_navigation/cronjobs/is_enabled') == 1) {
+            return $this->processStockForProduct();
+        }
+        return $this;
     }
 
     /**
@@ -41,7 +44,7 @@ class UpdateStockFilter
      */
     public function processStockForProduct($product_id = null)
     {
-        if ($this->scopeConfig->getValue('layered_navigation/cronjobs/is_enabled') == 1) {
+        if ($this->scopeConfig->getValue('layered_navigation/general/stockFilter') == 1) {
             $connection = $this->resourceConnection->getConnection();
             $table = $connection->getTableName('catalog_product_entity_int');
             // Update query
