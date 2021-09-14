@@ -47,7 +47,9 @@ class UpdateStockFilter
         if ($this->scopeConfig->getValue('layered_navigation/general/stockFilter') == 1) {
             $connection = $this->resourceConnection->getConnection();
             $table = $connection->getTableName('catalog_product_entity_int');
-            // Update query
+            // RAW update query
+            // TODO: Convert raw query to to ORM Query
+            // phpcs:disable Magento2.SQL.RawQuery.FoundRawSql
             $query = "UPDATE " . $table . " t
             JOIN cataloginventory_stock_status a ON a.product_id = t.entity_id
             JOIN eav_attribute ap ON ap.attribute_id = t.attribute_id
